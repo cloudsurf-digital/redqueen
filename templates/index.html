@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Tulpe Control Center</title>
+    <!-- Path to Framework7 Library CSS-->
+    <link rel="stylesheet" href="static/css/framework7.ios.min.css">
+    <!-- Path to your custom app styles-->
+    <link rel="stylesheet" href="static/css/my-app.css">
+  </head>
+  <body>
+    <!-- Status bar overlay for fullscreen mode-->
+    <div class="statusbar-overlay"></div>
+    <!-- Panels overlay-->
+    <div class="panel-overlay"></div>
+    <!-- Left panel with reveal effect-->
+    <div class="panel panel-left panel-reveal">
+      <div class="content-block">
+        <p>Left panel content goes here</p>
+      </div>
+    </div>
+    <!-- Right panel with cover effect-->
+    <div class="panel panel-right panel-cover">
+      <div class="content-block">
+        <p>Right panel content goes here</p>
+      </div>
+    </div>
+    <!-- Views-->
+    <div class="views">
+      <!-- Your main view, should have "view-main" class-->
+      <div class="view view-main">
+        <!-- Top Navbar-->
+        <div class="navbar">
+          <!-- Navbar inner for Index page-->
+          <div data-page="index" class="navbar-inner">
+            <!-- We have home navbar without left link-->
+            <div class="center sliding">Tulpe Control Center</div>
+            <div class="right">
+              <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
+            </div>
+          </div>
+          <!-- Navbar inner for Lights page-->
+          <div data-page="lights" class="navbar-inner cached">
+            <div class="left sliding"><a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a></div>
+            <div class="center sliding">Light Control</div>
+          </div>
+          <!-- Navbar inner for Leds page-->
+          <div data-page="leds" class="navbar-inner cached">
+            <div class="left sliding"><a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a></div>
+            <div class="center sliding">Rgb Led Control</div>
+          </div>
+          <!-- Navbar inner for Screen page-->
+          <div data-page="screen" class="navbar-inner cached">
+            <div class="left sliding"><a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a></div>
+            <div class="center sliding">Screen Control</div>
+          </div>
+        </div>
+        <!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
+        <div class="pages navbar-through toolbar-through">
+          <!-- Index Page-->
+          <div data-page="index" class="page">
+            <!-- Scrollable page content-->
+            <div class="page-content">
+              <div class="content-block-title">Red-queen control</div>
+              <div class="content-block">
+                <div class="content-block-inner">
+                  <p>Time to control your cinema with the help from Red-queen!</p>
+                </div>
+              </div>
+              <div class="content-block-title">Menue</div>
+              <div class="list-block">
+                <ul>
+                  <li><a href="#lights" class="item-link">
+                      <div class="item-content">
+                        <div class="item-inner"> 
+                          <div class="item-title">Lights</div>
+                        </div>
+                      </div></a></li>
+                  <li><a href="#leds" class="item-link">
+                      <div class="item-content"> 
+                        <div class="item-inner">
+                          <div class="item-title">Leds</div>
+                        </div>
+                      </div></a></li>
+                  <li><a href="#screen" class="item-link">
+                      <div class="item-content"> 
+                        <div class="item-inner">
+                          <div class="item-title">Screen</div>
+                        </div>
+                      </div></a></li>
+                </ul>
+              </div>
+              <div class="content-block-title">Side panels</div>
+              <div class="content-block">
+                <div class="row">
+                  <div class="col-50"><a href="#" data-panel="left" class="button open-panel">Left Panel</a></div>
+                  <div class="col-50"><a href="#" data-panel="right" class="button open-panel">Right Panel</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Lights Page-->
+          <div data-page="lights" class="page cached">
+            <div class="page-content">
+              <div class="content-block-title">Switch</div>
+              <div class="list-block">
+              <form action="light/switch" method="GET" class="ajax-submit-onchange">
+                <ul>
+                  {% for key, value in area_states.iteritems() %}
+                  <li>
+                    <div class="item-content">
+                      <div class="item-media"><i class="icon icon-form-toggle"></i></div>
+                      <div class="item-inner"> 
+                        <div class="item-title label">{{ key }}</div>
+                        <div class="item-input">
+                          <label class="label-switch">
+                            <input name="{{ key }}" type="checkbox" {% if value %}checked{% endif %}>
+                            <div class="checkbox"></div>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </form>
+              </div>
+            </div>
+          </div>
+          <!-- Led Page-->
+          <div data-page="leds" class="page cached">
+            <div class="page-content">
+              <div class="content-block-title">Led Mode</div>
+              <div class="list-block">
+              <form action="rgb/setmode" method="GET" class="ajax-submit-onchange">
+                <ul>
+                  <li>
+                    <a href="#" class="item-link smart-select">
+                      <select name="rgbmodes">
+                        <option value="{{ active_rgbmode}}" selected>{{ active_rgbmode|capitalize }}</option>
+                        {% for mode in rgbmodes %}
+                        {% if not active_rgbmode ==  mode %}
+                        <option value="{{ mode }}">{{ mode|capitalize }}</option>
+                        {% endif %}
+                        {% endfor %}
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Modes</div>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- Bottom Toolbar-->
+        <div class="toolbar">
+          <div class="toolbar-inner"><a href="http://www.johnny-die-tulpe.de" class="link">www.johnny-die-tulpe.de</a></div>
+        </div>
+      </div>
+    </div>
+    <!-- Path to Framework7 Library JS-->
+    <script type="text/javascript" src="static/js/framework7.min.js"></script>
+    <!-- Path to your app js-->
+    <script type="text/javascript" src="static/js/homecontrol.js"></script>
+  </body>
+</html>
