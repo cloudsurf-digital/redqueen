@@ -11,9 +11,8 @@ class RgbMode(Thread):
     self.func = function
     Thread.__init__(self) 
   def run(self):
-    while not self.is_stop:
-     self.func()
-     time.sleep(30)
+    while not self.is_stop and not res:
+     res = self.func()
   def stop(self):
     self.is_stop = True
 
@@ -25,7 +24,8 @@ class ArduinoRgb(object):
     self.t = None
     self.active_mode = None
     self.modes = {'random': self.random,
-                  'off': self.off }
+                  'off': self.off,
+                  'amber': self.mode_amber }
   def arduino_connect(self):
     for com in range(0,4):
       try:
@@ -66,9 +66,20 @@ class ArduinoRgb(object):
 
   def random(self):
     self.set_light(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+    time.sleep(30)
+
+  def mode_amber(self):
+    self._pulse_color(200,80,30)
+
+  def _pulse_color(self, r, g, b):
+    self.set_light(r - 10, g - 13, b - 15, speed='5')
+    time.sleep(1)
+    self.set_light(r, g, b, speed=5)
 
   def off(self):
     self.set_light(0,0,0)
+    # return True if no loop is neccessary
+    return True
 
   def set_mode(self, mode):
     if mode in self.modes.keys():
