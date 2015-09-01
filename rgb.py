@@ -11,6 +11,7 @@ class RgbMode(Thread):
     self.func = function
     Thread.__init__(self) 
   def run(self):
+    res = None
     while not self.is_stop and not res:
      res = self.func()
   def stop(self):
@@ -69,12 +70,14 @@ class ArduinoRgb(object):
     time.sleep(30)
 
   def mode_amber(self):
-    self._pulse_color(200,80,30)
+    self._pulse_color(230,50,30)
 
   def _pulse_color(self, r, g, b):
-    self.set_light(r - 10, g - 13, b - 15, speed='5')
-    time.sleep(1)
-    self.set_light(r, g, b, speed=5)
+    speed = str(random.randint(15, 40))
+    diff1, diff2, diff3  = random.randint(5, 30), random.randint(5, 30), random.randint(5, 30)
+    self.set_light(r - diff1, g - diff2, b - diff3, speed=speed)
+    time.sleep(1.5)
+    self.set_light(r, g, b, speed=40)
 
   def off(self):
     self.set_light(0,0,0)
