@@ -23,9 +23,10 @@ class ArduinoRgb(object):
     self.ard = self.arduino_connect()
     self.red, self.green, self.blue = self.get_colors()
     self.t = None
-    self.active_mode = None
-    self.modes = {'random': self.random,
+    self.active_mode = 'off'
+    self.modes = {'random full': self.random,
                   'off': self.off,
+                  'random low': self.random_low,
                   'amber': self.mode_amber }
   def arduino_connect(self):
     for com in range(0,4):
@@ -67,6 +68,10 @@ class ArduinoRgb(object):
 
   def random(self):
     self.set_light(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+    time.sleep(30)
+
+  def random_low(self):
+    self.set_light(random.randint(0, 90), random.randint(0, 90), random.randint(0, 90))
     time.sleep(30)
 
   def mode_amber(self):
