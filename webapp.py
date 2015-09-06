@@ -7,7 +7,7 @@ appname = "homecontrol"
 
 leds = rgb.ArduinoRgb()
 
-areas = ['leinwand', 'essbereich', 'couch']
+areas = ['leinwand', 'essbereich', 'couch', 'vitrine']
 
 @app.route('/')
 def index():

@@ -4,6 +4,7 @@ import shelve
 
 pin_map = {'leinwand'  : '2',
            'essbereich': '3',
+           'vitrine'   : '5',
            'couch'     : '4' }
 
 def load_cache():
