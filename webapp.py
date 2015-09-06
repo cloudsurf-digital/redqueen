@@ -7,12 +7,10 @@ appname = "homecontrol"
 
 leds = rgb.ArduinoRgb()
 
-areas = ['leinwand', 'essbereich', 'couch', 'vitrine']
-
 @app.route('/')
 def index():
   area_states = {}
-  for area in areas:
+  for area in switch.pin_map.keys():
     area_states[area] = switch.get_state(area)
   return render_template('index.html',
     area_states=area_states,
@@ -26,8 +24,8 @@ def light():
 @app.route('/light/switch')
 def light_area():
   res = {}
-  off = set(areas).difference(request.args.keys())
-  on = set(areas).intersection(request.args.keys())
+  off = set(switch.pin_map.keys()).difference(request.args.keys())
+  on = set(switch.pin_map.keys()).intersection(request.args.keys())
 
   for area in off:
     switch.light(area, False)
