@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
-import switch
-import rgb
+from core import switch, rgb
 import json
 app = Flask(__name__)
 appname = "homecontrol"
