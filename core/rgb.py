@@ -22,6 +22,8 @@ class RgbMode(Thread):
   def stopped(self):
     return self._stop.isSet()
 
+class NoSerialArduinoFoundException(Exception):
+  pass
 
 class ArduinoRgb(object):
   def __init__(self):
@@ -46,7 +48,10 @@ class ArduinoRgb(object):
         break
       except:
         pass
-    return ard
+    if ard:
+      return ard
+    else:
+      raise NoSerialArduinoFoundException('Failed to found Arduino on serial ports /dev/ttyACMXX')
 
   def get_modes(self):
     return sorted(self.modes.keys())
