@@ -89,10 +89,8 @@ class ArduinoRgb(object):
     time.sleep(20)
 
   def mode_police(self):
-    self.set_light(200, 0, 0, speed='2')
-    time.sleep(0.3)
-    self.set_light(0, 0, 200, speed='2')
-    time.sleep(0.3)
+    self.set_light(200, 0, 0, speed='3')
+    self.set_light(0, 0, 200, speed='3')
 
   def mode_amber(self):
     self._pulse_color(240,50,30)
@@ -101,10 +99,9 @@ class ArduinoRgb(object):
     self._pulse_color(217,15,19)
 
   def _pulse_color(self, r, g, b):
-    diff1, diff2, diff3  = random.randint(5, 30), random.randint(5, 30), random.randint(5, 30)
-    self.set_light(r - diff1, g - diff2, b - diff3, speed='30')
-    time.sleep(1.5)
-    self.set_light(r, g, b, speed='30')
+    diff1, diff2, diff3  = random.randint(2, 25), random.randint(2, 25), random.randint(2, 25)
+    self.set_light(r - diff1, g - diff2, b - diff3, speed='50')
+    self.set_light(r, g, b, speed='50')
 
   def off(self):
     self.set_light(0,0,0)
