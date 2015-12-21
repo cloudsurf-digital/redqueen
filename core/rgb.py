@@ -36,7 +36,7 @@ class ArduinoRgb(object):
                   'off': (self.off,),
                   'random low': (self.random_low,),
                   'brothel': (self.mode_brothel,),
-                  'yellow': (self.set_light, (255,65,0), {'speed': '20'}),
+                  'yellow': (self.set_light, (255,55,0), {'speed': '20'}),
                   'police': (self.mode_police,),
                   'amber': (self.mode_amber,) }
   def arduino_connect(self):
@@ -95,16 +95,16 @@ class ArduinoRgb(object):
     time.sleep(0.3)
 
   def mode_amber(self):
-    self._pulse_color(230,50,30)
+    self._pulse_color(240,50,30)
 
   def mode_brothel(self):
     self._pulse_color(217,15,19)
 
   def _pulse_color(self, r, g, b):
-    diff1, diff2, diff3  = random.randint(1, 25), random.randint(1, 25), random.randint(1, 25)
+    diff1, diff2, diff3  = random.randint(5, 30), random.randint(5, 30), random.randint(5, 30)
     self.set_light(r - diff1, g - diff2, b - diff3, speed='30')
-    time.sleep(1.8)
-    self.set_light(r, g, b, speed='40')
+    time.sleep(1.5)
+    self.set_light(r, g, b, speed='30')
 
   def off(self):
     self.set_light(0,0,0)
