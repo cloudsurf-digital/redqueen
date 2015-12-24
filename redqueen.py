@@ -37,6 +37,15 @@ def set_rgb():
   mode = request.args['rgbmodes']
   leds.set_mode(mode)
   return "done"
+
+@app.route('/rgb/setcolor')
+def set_color():
+  r, g, b = int(request.args['red']), int(request.args['green']), int(request.args['blue'])
+  if request.args.has_key('pulse'):
+    leds.pulse_color(r,g,b)
+  else:
+    leds.set_light(r,g,b)
+  return "done"
   
 if __name__ == '__main__':
   app.debug = True

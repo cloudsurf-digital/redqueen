@@ -93,12 +93,12 @@ class ArduinoRgb(object):
     self.set_light(0, 0, 200, speed='3')
 
   def mode_amber(self):
-    self._pulse_color(240,50,30)
+    self.pulse_color(240,50,30)
 
   def mode_brothel(self):
-    self._pulse_color(217,15,19)
+    self.pulse_color(217,15,19)
 
-  def _pulse_color(self, r, g, b):
+  def pulse_color(self, r, g, b):
     diff1, diff2, diff3  = random.randint(2, 25), random.randint(2, 25), random.randint(2, 25)
     self.set_light(r - diff1, g - diff2, b - diff3, speed='50')
     self.set_light(r, g, b, speed='50')
