@@ -4,7 +4,7 @@ import json
 app = Flask(__name__)
 appname = "homecontrol"
 
-leds = rgb.ArduinoRgb()
+leds = rgb.RgbControl()
 
 @app.route('/')
 def index():
@@ -31,7 +31,7 @@ def light_area():
   for area in on:
     switch.light(area, True)
   return "done"
-       
+
 @app.route('/rgb/setmode')
 def set_rgb():
   mode = request.args['rgbmodes']
@@ -46,7 +46,7 @@ def set_color():
   else:
     leds.set_light(r,g,b)
   return "done"
-  
+
 if __name__ == '__main__':
   app.debug = True
   app.run(host='0.0.0.0', port=80)
