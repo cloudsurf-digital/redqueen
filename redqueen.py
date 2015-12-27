@@ -42,9 +42,9 @@ def set_rgb():
 def set_color():
   r, g, b = int(request.args['red']), int(request.args['green']), int(request.args['blue'])
   if request.args.has_key('pulse'):
-    leds.pulse_color(r,g,b)
+    leds.setmode('CustomColor', r, g, b, pulse=True)
   else:
-    leds.set_light(r,g,b)
+    leds.setmode('CustomColor', r, g, b)
   return "done"
 
 if __name__ == '__main__':

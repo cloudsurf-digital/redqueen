@@ -88,7 +88,14 @@ class base_mode(Thread):
     self.serial_conn = serial_conn
     self._stop = Event()
     self.loop = self.LOOP
+    self.reconfig(self, *args, **kwargs)
     Thread.__init__(self)
+
+  def reconfig(self, *args, **kwargs):
+    '''for each unknown keyword argument make it available in self context'''
+    for k in kwargs.keys():
+      self.__setattr__(k, kwargs[k])
+
   def _run_mode(self):
     '''override in abstractin classes'''
     # does nothing
@@ -213,4 +220,15 @@ class YellowMode(base_mode):
   LOOP = False
   def _run_mode(self):
     self._set_light(255,55,0)
+    return 0
+
+class CustomColorMode(base_mode):
+  NAME = 'Custom color'
+  LOOP = False
+  def _run_mode(self):
+    if self.pulse_mode:
+      self.loop = True
+      self._pulse_color()
+    else:
+      self._set_light(self.red, self.green, self.blue)
     return 0
