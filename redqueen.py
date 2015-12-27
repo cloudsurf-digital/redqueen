@@ -9,10 +9,14 @@ leds = rgb.RgbControl()
 @app.route('/')
 def index():
   area_states = {}
+  r, g, b = leds.get_colors()
   for area in switch.pin_map.keys():
     area_states[area] = switch.get_state(area)
   return render_template('index.html',
     area_states=area_states,
+    r=r,
+    g=g,
+    b=b,
     rgbmodes=leds.get_modes(),
     active_rgbmode=leds.get_mode())
 
@@ -42,9 +46,9 @@ def set_rgb():
 def set_color():
   r, g, b = int(request.args['red']), int(request.args['green']), int(request.args['blue'])
   if request.args.has_key('pulse'):
-    leds.setmode('CustomColor', r, g, b, pulse=True)
+    leds.set_mode('CustomColorMode', red=r, green=g, blue=b, pulse_mode=True)
   else:
-    leds.setmode('CustomColor', r, g, b)
+    leds.set_mode('CustomColorMode', red=r, green=g, blue=b, pulse_mode=False)
   return "done"
 
 if __name__ == '__main__':
