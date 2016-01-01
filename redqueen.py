@@ -4,15 +4,19 @@ import json
 app = Flask(__name__)
 appname = "homecontrol"
 
-leds = rgb.ArduinoRgb()
+leds = rgb.RgbControl()
 
 @app.route('/')
 def index():
   area_states = {}
+  r, g, b = leds.get_colors()
   for area in switch.pin_map.keys():
     area_states[area] = switch.get_state(area)
   return render_template('index.html',
     area_states=area_states,
+    r=r,
+    g=g,
+    b=b,
     rgbmodes=leds.get_modes(),
     active_rgbmode=leds.get_mode())
 
@@ -31,7 +35,7 @@ def light_area():
   for area in on:
     switch.light(area, True)
   return "done"
-       
+
 @app.route('/rgb/setmode')
 def set_rgb():
   mode = request.args['rgbmodes']
@@ -42,11 +46,11 @@ def set_rgb():
 def set_color():
   r, g, b = int(request.args['red']), int(request.args['green']), int(request.args['blue'])
   if request.args.has_key('pulse'):
-    leds.pulse_color(r,g,b)
+    leds.set_mode('CustomColorMode', red=r, green=g, blue=b, pulse_mode=True)
   else:
-    leds.set_light(r,g,b)
+    leds.set_mode('CustomColorMode', red=r, green=g, blue=b, pulse_mode=False)
   return "done"
-  
+
 if __name__ == '__main__':
   app.debug = True
   app.run(host='0.0.0.0', port=80)
