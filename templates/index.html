@@ -142,7 +142,7 @@
                       <select name="rgbmodes">
                         <option value="{{ active_rgbmode}}" selected>{{ active_rgbmode|capitalize }}</option>
                         {% for mode in rgbmodes %}
-                        {% if not active_rgbmode ==  mode %}
+                        {% if not active_rgbmode == mode or mode == "CustomColorMode" %}
                         <option value="{{ mode }}">{{ mode|capitalize }}</option>
                         {% endif %}
                         {% endfor %}
@@ -184,7 +184,7 @@
                         <div class="item-title label">Red</div>
                         <div class="item-input">
                           <div class="range-slider">
-                            <input name="red" type="range" min="0" max="255" value="123" step="1">
+                            <input name="red" type="range" min="0" max="255" value="{{ r }}" step="1">
                           </div>
                         </div>
                       </div>
@@ -197,7 +197,7 @@
                         <div class="item-title label">Green</div>
                         <div class="item-input">
                           <div class="range-slider">
-                            <input name="green" type="range" min="0" max="255" value="123" step="1">
+                            <input name="green" type="range" min="0" max="255" value="{{ g }}" step="1">
                           </div>
                         </div>
                       </div>
@@ -210,7 +210,7 @@
                         <div class="item-title label">Blue</div>
                         <div class="item-input">
                           <div class="range-slider">
-                            <input name="blue" type="range" min="0" max="255" value="123" step="1">
+                            <input name="blue" type="range" min="0" max="255" value="{{ b }}" step="1">
                           </div>
                         </div>
                       </div>

@@ -65,17 +65,22 @@ class RgbControl(object):
       self.t.stop()
       self.t.join()
 
-  def set_mode(self, mode):
+  def set_mode(self, mode, **kwargs):
+    res = None
+    logging.debug('try to set rgb mode to: ' + mode)
     if mode == "Off":
       self.shutdown()
-      return {'status': 'mode is set to Off'}
-    for m,o in self.modes():
-      if o.NAME == mode:
-        self.shutdown()
-        self.t = o(self.ard)
-        self.t.start()
-        return {'status': 'mode is set to %s' %(mode)}
-    return {'status': 'unsupported mode'}
+      res = {'status': 'mode is set to Off'}
+    else:
+      for m,o in self.modes():
+        if o.NAME == mode or m == mode:
+          self.shutdown()
+          self.t = o(self.ard, **kwargs)
+          self.t.start()
+          res = {'status': 'mode is set to %s' %(mode)}
+    if not res:
+      res = {'status': 'unsupported mode'}
+    return res
 
 class base_mode(Thread):
   SPEED   = 30
@@ -91,12 +96,16 @@ class base_mode(Thread):
     self.serial_conn = serial_conn
     self._stop = Event()
     self.loop = self.LOOP
+    logging.debug('RgbMode: ' + self.NAME + ' initialzed')
     self.reconfig(self, *args, **kwargs)
     Thread.__init__(self)
 
   def reconfig(self, *args, **kwargs):
     '''for each unknown keyword argument make it available in self context'''
+    self.red, self.green, self.blue = self.RGB[0], self.RGB[1], self.RGB[2]
+    # reset colors
     for k in kwargs.keys():
+      logging.debug('set: self.%s to %s' % (k, kwargs[k]))
       self.__setattr__(k, kwargs[k])
 
   def _run_mode(self):
@@ -155,28 +164,6 @@ class base_mode(Thread):
       logging.debug(line)
       if line.startswith('finished'):
         break
-    #line = self.serial_conn.readline().rstrip()
-    #if not line.startswith('current set'):
-    #  raise UnknownArduinoResponseException(line)
-    #line = self.serial_conn.readline().rstrip()
-    #if not line.startswith('receiving data'):
-    #  raise UnknownArduinoResponseException(line)
-    #line = self.serial_conn.readline().rstrip()
-    #if not line.startswith('processing data'):
-    #  raise UnknownArduinoResponseException(line)
-    #fadeto = line.split(':')[1]
-    #_, real_r, real_g, real_b, _ = re.split('\D+', fadeto)
-    #real_r, real_g, real_b = int(real_r), int(real_g), int(real_b)
-    #logging.debug('round up fade difference on arduino: r = %i, g = %s, b = %i' \
-    #  % (abs(r - real_r), abs(g - real_g), abs(b - real_b)))
-    #line = self.serial_conn.readline().rstrip()
-    #if not line.startswith('steps are'):
-    #  raise UnknownArduinoResponseException(line)
-    #logging.debug(line)
-    #line = self.serial_conn.readline().rstrip()
-    #t line.startswith('finished'):
-    #  line = self.serial_conn.readline().rstrip()
-    #  logging.debug(line)
 
   def __str__(self):
     return self.NAME
@@ -230,7 +217,6 @@ class CustomColorMode(base_mode):
   LOOP = False
   def _run_mode(self):
     if self.pulse_mode:
-      self.loop = True
       self._pulse_color()
     else:
       self._set_light(self.red, self.green, self.blue)
