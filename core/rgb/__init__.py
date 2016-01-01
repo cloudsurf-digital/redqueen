@@ -43,7 +43,10 @@ class RgbControl(object):
         yield name, obj
 
   def get_modes(self):
-    return sorted([ o.NAME for m,o in self.modes()])
+    modes = [ o.NAME for m,o in self.modes()]
+    sorted(modes)
+    modes.insert(0, "Off")
+    return modes
 
   def get_mode(self):
     if self.t:
