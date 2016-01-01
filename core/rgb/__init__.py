@@ -64,6 +64,7 @@ class RgbControl(object):
     if self.t:
       self.t.stop()
       self.t.join()
+      self.t = None
 
   def set_mode(self, mode, **kwargs):
     res = None

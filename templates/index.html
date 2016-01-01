@@ -140,11 +140,12 @@
                     <form action="rgb/setmode" method="GET" class="ajax-submit-onchange">
                     <a href="#" class="item-link smart-select">
                       <select name="rgbmodes">
-                        <option value="{{ active_rgbmode}}" selected>{{ active_rgbmode|capitalize }}</option>
                         {% for mode in rgbmodes %}
-                        {% if not active_rgbmode == mode or mode == "CustomColorMode" %}
-                        <option value="{{ mode }}">{{ mode|capitalize }}</option>
-                        {% endif %}
+                          {% if not mode == "CustomColorMode" %}
+                            <option value="{{ mode }}" {% if active_rgbmode == mode %}selected{% endif %}>
+                             {{ mode|capitalize }}
+                            </option>
+                          {% endif %}
                         {% endfor %}
                       </select>
                       <div class="item-content">
