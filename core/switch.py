@@ -17,7 +17,6 @@ class Switch(object):
     GPIO.setup(self.pin, GPIO.OUT)
     self.state = self.get_state()
     logging.debug('Switch: ' + self.name + ' initialized')
-    logging.debug('Switch: Current state is ' + str(self.state))
 
   def get_state(self):
     if self.invert:
@@ -26,19 +25,19 @@ class Switch(object):
 
   def on(self):
     if not self.get_state():
-      GPIO.output(self.pin, GPIO.HIGH)
+      self.light_switch()
       logging.debug('Switch: ' + self.name + ' on')
     else:
       logging.debug('Switch: ' + self.name + ' already on')
   def off(self):
     if self.get_state():
-      GPIO.output(self.pin, GPIO.LOW)
+      self.light_switch()
       logging.debug('Switch: ' + self.name + ' off')
     else:
       logging.debug('Switch: ' + self.name + ' already off')
 
   def light_switch(self):
-    GPIO.output(self.pin, not(self.get_state()))
+    GPIO.output(self.pin, not(GPIO.input(self.pin)))
 
 
 class LeinwandSwitch(Switch):
