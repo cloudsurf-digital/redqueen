@@ -14,8 +14,8 @@ class Switch(object):
     self.pin  = self.PIN
     GPIO.setup(self.pin, GPIO.OUT)
     self.state = GPIO.input(self.pin)
-    logging.debug('Switch: ' + self.name + ' initialzed')
-    logging.debug('Switch: Current state is' + str(self.state))
+    logging.debug('Switch: ' + self.name + ' initialized')
+    logging.debug('Switch: Current state is ' + str(self.state))
 
   def get_state(self):
     return bool(self.state)

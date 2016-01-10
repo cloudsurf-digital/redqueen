@@ -22,7 +22,7 @@ class RgbMode(Thread):
     self.serial_conn = serial_conn
     self._stop = Event()
     self.loop = self.LOOP
-    logging.debug('RgbMode: ' + self.NAME + ' initialzed')
+    logging.debug('RgbMode: ' + self.NAME + ' initialized')
     self.reconfig(self, *args, **kwargs)
     Thread.__init__(self)
 
