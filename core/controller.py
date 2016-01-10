@@ -38,13 +38,13 @@ class Controller(object):
 
   def _gen_switches(self):
     for name, obj in inspect.getmembers(switch, inspect.isclass):
-      if not name.startswith('Switch'):
+      if (obj is not switch.Switch) and (switch.Switch in inspect.getmro(obj)):
         yield name, obj
 
 
   def _gen_rgbmodes(self):
     for name, obj in inspect.getmembers(rgbmodes, inspect.isclass):
-      if name.endswith('Mode'):
+      if (obj is not rgbmodes.RgbMode) and (rgbmodes.RgbMode in inspect.getmro(obj)):
         yield name, obj
 
   def switch(self, switch_name):
