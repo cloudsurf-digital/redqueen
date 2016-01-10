@@ -1,96 +1,21 @@
 #!/usr/bin/python
-import serial
+
+import shelve
+from threading import Thread, Event
 import re
 import sys
-import inspect
 import random
 import time
 import logging
-import shelve
-from threading import Thread, Event
 
-logging.basicConfig(level=logging.DEBUG, format='%(message)s')
-
-class NoSerialArduinoFoundException(Exception):
-  pass
-
-class UnknownArduinoResponseException(Exception):
-  pass
-
-class RgbControl(object):
-  def __init__(self):
-    self.ard = self.arduino_connect()
-    self.t = None
-
-  def arduino_connect(self):
-    for com in range(0,4):
-      try:
-        port = '/dev/ttyACM' + str(com)
-        BAUD = 9600
-        ard = serial.Serial(port, BAUD, timeout=40)
-        break
-      except:
-        pass
-    if ard:
-      logging.debug('found serial device: %s' % (port))
-      return ard
-    else:
-      raise NoSerialArduinoFoundException('Failed to found Arduino on serial ports /dev/ttyACMXX')
-
-  def modes(self):
-    for name, obj in inspect.getmembers(sys.modules[__name__], inspect.isclass):
-      if name.endswith('Mode'):
-        yield name, obj
-
-  def get_modes(self):
-    modes = [ o.NAME for m,o in self.modes()]
-    sorted(modes)
-    modes.insert(0, "Off")
-    return modes
-
-  def get_mode(self):
-    if self.t:
-      return self.t.__str__()
-    else:
-      return "Off"
-
-  def get_colors(self):
-    if self.t:
-      return self.t.current_color()
-    else:
-      return 0, 0, 0
-
-  def shutdown(self):
-    if self.t:
-      self.t.stop()
-      self.t.join()
-      self.t = None
-
-  def set_mode(self, mode, **kwargs):
-    res = None
-    logging.debug('try to set rgb mode to: ' + mode)
-    if mode == "Off":
-      self.shutdown()
-      res = {'status': 'mode is set to Off'}
-    else:
-      for m,o in self.modes():
-        if o.NAME == mode or m == mode:
-          self.shutdown()
-          self.t = o(self.ard, **kwargs)
-          self.t.start()
-          res = {'status': 'mode is set to %s' %(mode)}
-    if not res:
-      res = {'status': 'unsupported mode'}
-    return res
-
-class base_mode(Thread):
+class RgbMode(Thread):
   SPEED   = 30
   TMPFILE = '/tmp/rgb.state'
   LOOP    = True
   NAME    = 'base'
   RGB     = (0,0,0)
   def __init__(self, serial_conn, *args, **kwargs):
-    super(base_mode, self).__init__()
+    super(RgbMode, self).__init__()
     self._pulse = False
     #self.fs_serializer = shelve.open(self.TMPFILE + self.NAME, writeback=True)
     self.red, self.green, self.blue = self.RGB[0], self.RGB[1], self.RGB[2]
@@ -170,19 +95,19 @@ class base_mode(Thread):
     return self.NAME
 
 
-class RandomMode(base_mode):
+class RandomMode(RgbMode):
   NAME = 'random full'
   def _run_mode(self):
     self._set_light(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
     return 30
 
-class RandomLowMode(base_mode):
+class RandomLowMode(RgbMode):
   NAME = 'random low'
   def _run_mode(self):
     self._set_light(random.randint(0, 90), random.randint(0, 90), random.randint(0, 90))
     return 30
 
-class PoliceMode(base_mode):
+class PoliceMode(RgbMode):
   NAME = 'police'
   def _run_mode(self):
     if self.blue == 200:
@@ -192,28 +117,28 @@ class PoliceMode(base_mode):
       self._set_light(0, 0, 200, speed=0)
     return 0.5
 
-class AmberMode(base_mode):
+class AmberMode(RgbMode):
   NAME = 'amber'
   RGB  = (240,50,30)
   def _run_mode(self):
     self._pulse_color()
     return 0.5
 
-class BrothelMode(base_mode):
+class BrothelMode(RgbMode):
   NAME = 'brothel'
   RGB  = (217,25,29)
   def _run_mode(self):
     self._pulse_color()
     return 0
 
-class YellowMode(base_mode):
+class YellowMode(RgbMode):
   NAME = 'yellow'
   LOOP = False
   def _run_mode(self):
     self._set_light(255,55,0)
     return 0
 
-class CustomColorMode(base_mode):
+class CustomColorMode(RgbMode):
   NAME = 'Custom color'
   LOOP = False
   def _run_mode(self):

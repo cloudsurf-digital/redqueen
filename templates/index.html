@@ -75,18 +75,18 @@
                 <ul>
                   <li><a href="#lights" class="item-link">
                       <div class="item-content">
-                        <div class="item-inner"> 
+                        <div class="item-inner">
                           <div class="item-title">Lights</div>
                         </div>
                       </div></a></li>
                   <li><a href="#leds" class="item-link">
-                      <div class="item-content"> 
+                      <div class="item-content">
                         <div class="item-inner">
                           <div class="item-title">Leds</div>
                         </div>
                       </div></a></li>
                   <li><a href="#screen" class="item-link">
-                      <div class="item-content"> 
+                      <div class="item-content">
                         <div class="item-inner">
                           <div class="item-title">Screen</div>
                         </div>
@@ -109,15 +109,15 @@
               <div class="list-block">
               <form action="light/switch" method="GET" class="ajax-submit-onchange">
                 <ul>
-                  {% for key, value in area_states.iteritems() %}
+                  {% for area, state in area_states %}
                   <li>
                     <div class="item-content">
                       <div class="item-media"><i class="icon icon-form-toggle"></i></div>
-                      <div class="item-inner"> 
-                        <div class="item-title label">{{ key }}</div>
+                      <div class="item-inner">
+                        <div class="item-title label">{{ area }}</div>
                         <div class="item-input">
                           <label class="label-switch">
-                            <input name="{{ key }}" type="checkbox" {% if value %}checked{% endif %}>
+                            <input name="{{ area }}" type="checkbox" {% if state %}checked{% endif %}>
                             <div class="checkbox"></div>
                           </label>
                         </div>
@@ -163,7 +163,7 @@
                           <div class="item-title">Custom Color</div>
                         </div>
                       </div>
-                  </li>                         
+                  </li>
                   <li>
                     <div class="item-content">
                       <div class="item-media"><i class="icon icon-form-toggle"></i></div>
@@ -224,7 +224,7 @@
             </div>
           </div>
         </div>
- 
+
         <!-- Bottom Toolbar-->
         <div class="toolbar">
           <div class="toolbar-inner"><a href="http://www.johnny-die-tulpe.de" class="link">www.johnny-die-tulpe.de</a></div>
