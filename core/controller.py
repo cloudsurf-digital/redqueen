@@ -32,8 +32,8 @@ class Controller(object):
 
   def _init_switches(self):
     switches = {}
-    for name, obj in self._gen_switches():
-      switches[name.NAME] = obj()
+    for _, obj in self._gen_switches():
+      switches[obj.NAME] = obj()
 
   def _gen_switches(self):
     for name, obj in inspect.getmembers(switch, inspect.isclass):
