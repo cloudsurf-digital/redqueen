@@ -7,18 +7,22 @@ GPIO.setwarnings(False)
 
 
 class Switch(object):
-  NAME = None
-  PIN  = None
+  INVERT = True
+  NAME   = None
+  PIN    = None
   def __init__(self):
     self.name = self.NAME
+    self.invert = self.INVERT
     self.pin  = self.PIN
     GPIO.setup(self.pin, GPIO.OUT)
-    self.state = GPIO.input(self.pin)
+    self.state = self.get_state()
     logging.debug('Switch: ' + self.name + ' initialized')
     logging.debug('Switch: Current state is ' + str(self.state))
 
   def get_state(self):
-    return bool(self.state)
+    if self.invert:
+      return bool(not GPIO.input(self.pin))
+    return bool(GPIO.input(self.pin))
 
   def on(self):
     GPIO.output(self.pin, GPIO.HIGH)
@@ -40,7 +44,7 @@ class EssbereichSwitch(Switch):
   PIN  = 3
 
 class CouchSwitch(Switch):
-  NAME = 'Leinwand'
+  NAME = 'Couch'
   PIN  = 4
 
 class VitrineSwitch(Switch):

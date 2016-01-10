@@ -5,10 +5,10 @@ app = Flask(__name__)
 appname = "homecontrol"
 
 ctrl = Controller()
+switches = ctrl.get_switches()
 
 @app.route('/')
 def index():
-  switches = ctrl.get_switches()
   r, g, b = ctrl.get_colors()
   return render_template('index.html',
     area_states=switches,
