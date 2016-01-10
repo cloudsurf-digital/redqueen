@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import RPi.GPIO as GPIO
+import logging
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
