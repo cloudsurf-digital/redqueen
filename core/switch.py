@@ -25,11 +25,17 @@ class Switch(object):
     return bool(GPIO.input(self.pin))
 
   def on(self):
-    GPIO.output(self.pin, GPIO.HIGH)
-    logging.debug('Switch: ' + self.name + ' on')
+    if not self.get_state():
+      GPIO.output(self.pin, GPIO.HIGH)
+      logging.debug('Switch: ' + self.name + ' on')
+    else:
+      logging.debug('Switch: ' + self.name + ' already on')
   def off(self):
-    GPIO.output(self.pin, GPIO.LOW)
-    logging.debug('Switch: ' + self.name + ' off')
+    if self.get_state():
+      GPIO.output(self.pin, GPIO.LOW)
+      logging.debug('Switch: ' + self.name + ' off')
+    else:
+      logging.debug('Switch: ' + self.name + ' already off')
 
   def light_switch(self):
     GPIO.output(self.pin, not(self.get_state()))
