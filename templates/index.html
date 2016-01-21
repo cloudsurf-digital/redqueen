@@ -117,7 +117,7 @@
                         <div class="item-title label">{{ area }}</div>
                         <div class="item-input">
                           <label class="label-switch">
-                            <input name="{{ area }}" type="checkbox" {% if state %}checked{% endif %}>
+                            <input name="{{ area }}" type="checkbox" {% if state == True %}checked{% endif %}>
                             <div class="checkbox"></div>
                           </label>
                         </div>
