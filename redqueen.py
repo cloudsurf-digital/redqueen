@@ -1,54 +1,48 @@
 from flask import Flask, render_template, request
-from core import switch, rgb
+from core.controller import Controller
 import json
 app = Flask(__name__)
 appname = "homecontrol"
 
-leds = rgb.RgbControl()
+ctrl = Controller()
+switches = ctrl.get_switches()
 
 @app.route('/')
 def index():
-  area_states = {}
-  r, g, b = leds.get_colors()
-  for area in switch.pin_map.keys():
-    area_states[area] = switch.get_state(area)
+  r, g, b = ctrl.get_colors()
   return render_template('index.html',
-    area_states=area_states,
+    area_states=switches,
     r=r,
     g=g,
     b=b,
-    rgbmodes=leds.get_modes(),
-    active_rgbmode=leds.get_mode())
+    rgbmodes=ctrl.get_rgb_modes(),
+    active_rgbmode=ctrl.get_rgb_mode())
 
-@app.route('/light')
-def light():
-  return render_template('light.html', areas=areas)
 
 @app.route('/light/switch')
 def light_area():
-  res = {}
-  off = set(switch.pin_map.keys()).difference(request.args.keys())
-  on = set(switch.pin_map.keys()).intersection(request.args.keys())
+  off = set([ name for name, state in switches ]).difference(request.args.keys())
+  on = set([ name for name, state in switches ]).intersection(request.args.keys())
 
   for area in off:
-    switch.light(area, False)
+    ctrl.switch_off(area)
   for area in on:
-    switch.light(area, True)
+    ctrl.switch_on(area)
   return "done"
 
 @app.route('/rgb/setmode')
 def set_rgb():
   mode = request.args['rgbmodes']
-  leds.set_mode(mode)
+  ctrl.set_rgb_mode(mode)
   return "done"
 
 @app.route('/rgb/setcolor')
 def set_color():
   r, g, b = int(request.args['red']), int(request.args['green']), int(request.args['blue'])
   if request.args.has_key('pulse'):
-    leds.set_mode('CustomColorMode', red=r, green=g, blue=b, pulse_mode=True)
+    ctrl.set_rgb_mode('CustomColorMode', red=r, green=g, blue=b, pulse_mode=True)
   else:
-    leds.set_mode('CustomColorMode', red=r, green=g, blue=b, pulse_mode=False)
+    ctrl.set_rgb_mode('CustomColorMode', red=r, green=g, blue=b, pulse_mode=False)
   return "done"
 
 if __name__ == '__main__':
