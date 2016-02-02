@@ -5,10 +5,10 @@ app = Flask(__name__)
 appname = "homecontrol"
 
 ctrl = Controller()
-switches = ctrl.get_switches()
 
 @app.route('/')
 def index():
+  switches = ctrl.get_switches()
   r, g, b = ctrl.get_colors()
   return render_template('index.html',
     area_states=switches,
@@ -21,6 +21,7 @@ def index():
 
 @app.route('/light/switch')
 def light_area():
+  switches = ctrl.get_switches()
   off = set([ name for name, state in switches ]).difference(request.args.keys())
   on = set([ name for name, state in switches ]).intersection(request.args.keys())
 
