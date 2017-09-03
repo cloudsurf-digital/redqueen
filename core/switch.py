@@ -42,16 +42,20 @@ class Switch(object):
 
 class LeinwandSwitch(Switch):
   NAME = 'Leinwand'
-  PIN  = 2
+  PIN  = 19
 
 class EssbereichSwitch(Switch):
   NAME = 'Essbereich'
-  PIN  = 3
+  PIN  = 26
 
 class CouchSwitch(Switch):
   NAME = 'Couch'
-  PIN  = 4
+  PIN  = 20
 
 class VitrineSwitch(Switch):
   NAME = 'Vitrine'
-  PIN  = 5
+  PIN  = 21
+
+class FanSwitch(Switch):
+  NAME = 'Fan'
+  PIN  = 13
